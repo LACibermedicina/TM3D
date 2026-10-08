@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tm3d · DApp de Soberania Clínica — Φgital m3d.pro</title>
+<meta name="description" content="DApp Tm3d: cofre soberano de dados de saúde com DNFT dinâmico, consentimento on-chain com expiração, criptografia real no navegador e pareamento por QR com a extensão Firefox.">
+<meta name="theme-color" content="#11695C">
+<style>
+:root{
+  --teal-claro:#7CC6B4;--teal:#47B29F;--teal-medio:#3BA794;--teal-escuro:#167D6E;--teal-profundo:#11695C;
+  --amarelo:#FFD166;--rosa:#FF6B9D;--azul:#4CC9F0;--lilas:#9B8CFF;--verde-vivo:#06D6A0;--laranja:#FF9F45;
+  --tinta:#122A2E;--tinta-2:#3E5C60;--papel:#F6FFFC;--papel-2:#EAFBF6;
+  --raio:18px;--sombra:0 14px 34px rgba(15,92,80,.16);--anim:cubic-bezier(.2,.8,.2,1);
+  --ff:ui-rounded,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--ff);background:linear-gradient(160deg,var(--papel),var(--papel-2) 60%,#E3F6FB);color:var(--tinta);min-height:100vh}
+button{font-family:inherit;cursor:pointer}
+header.topo{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:10px 18px;background:rgba(246,255,252,.85);backdrop-filter:blur(10px);border-bottom:1px solid #DDF3EC}
+.marca{display:flex;align-items:center;gap:12px}
+.logo-cubo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:26px;
+  background:linear-gradient(135deg,var(--teal),var(--teal-profundo));box-shadow:var(--sombra);animation:flutua 4s ease-in-out infinite}
+@keyframes flutua{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+.marca h1{font-size:18px;margin:0;color:var(--teal-profundo)}
+.marca .slogan{margin:0;font-size:12px;color:var(--tinta-2)}
+.pill{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  padding:6px 12px;border-radius:999px;background:#fff;border:1px solid #DDF3EC;box-shadow:0 4px 12px rgba(15,92,80,.08)}
+.pill.on{background:var(--verde-vivo);color:#04322b;border-color:transparent}
+nav#tabs{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px 0}
+.tab{border:1px solid #DDF3EC;background:#fff;border-radius:999px;padding:9px 16px;font-size:14px;font-weight:700;color:var(--tinta-2);
+  transition:all .25s var(--anim)}
+.tab:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,92,80,.12)}
+.tab.ativo{background:linear-gradient(135deg,var(--teal),var(--teal-escuro));color:#fff;border-color:transparent;box-shadow:var(--sombra)}
+main{padding:18px;max-width:1080px;margin:0 auto}
+section.sec{display:none;animation:entra .4s var(--anim)}
+section.sec.visivel{display:block}
+@keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.heroi{text-align:center;padding:26px 12px 8px}
+.heroi .logo-cubo{width:84px;height:84px;font-size:46px;border-radius:24px;margin:0 auto 10px}
+.heroi h2{margin:6px 0 4px;font-size:26px;color:var(--teal-profundo)}
+.heroi p{margin:4px auto;color:var(--tinta-2);max-width:560px;font-size:14px}
+.selos{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.selo-chip{font-size:11px;font-weight:700;background:#fff;border:1px solid #DDF3EC;border-radius:999px;padding:5px 10px;color:var(--tinta-2)}
+.card{background:#fff;border-radius:var(--raio);box-shadow:var(--sombra);padding:20px;margin:16px 0;border:1px solid #E4F5EF}
+.card h2{margin:0 0 4px;font-size:19px;color:var(--teal-profundo)}
+.card h3{margin:14px 0 6px;font-size:15px;color:var(--teal-escuro)}
+.card .sub{font-size:13px;color:var(--tinta-2);margin:0 0 12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.bt{border:1px solid #D8EFE8;background:#fff;border-radius:14px;padding:11px 18px;font-size:14px;font-weight:700;color:var(--teal-escuro);
+  transition:all .2s var(--anim)}
+.bt:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,92,80,.14)}
+.bt-forte{background:linear-gradient(135deg,var(--teal),var(--teal-escuro));color:#fff;border:none}
+.bt-perigo{background:linear-gradient(135deg,var(--rosa),#E0447E);color:#fff;border:none}
+.bt-amarelo{background:linear-gradient(135deg,var(--amarelo),var(--laranja));color:#5a3a00;border:none}
+.bt-mini{padding:6px 12px;font-size:12px;border-radius:10px}
+.bt:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.campo{width:100%;border:1px solid #D8EFE8;border-radius:12px;padding:11px 14px;font-size:14px;font-family:inherit;background:#FBFFFD;color:var(--tinta)}
+.campo:focus{outline:2px solid var(--teal-claro);border-color:var(--teal)}
+textarea.campo{min-height:96px;resize:vertical}
+label.rot{display:block;font-size:12px;font-weight:700;color:var(--tinta-2);margin:12px 0 5px;text-transform:uppercase;letter-spacing:.4px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed #E4F5EF;font-size:13px;flex-wrap:wrap}
+.kv b{color:var(--teal-profundo);word-break:break-all}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid #D8EFE8;background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:var(--tinta-2)}
+.chip.ativo{background:var(--azul);color:#04364a;border-color:transparent}
+.doc-card{border:2px solid #E4F5EF;border-radius:16px;padding:12px 14px;display:flex;gap:12px;align-items:center;background:#FBFFFD;cursor:pointer;transition:all .2s var(--anim)}
+.doc-card.ativo{border-color:var(--teal);background:var(--papel-2);box-shadow:0 8px 18px rgba(15,92,80,.12)}
+.doc-card .avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,var(--lilas),var(--azul));flex-shrink:0}
+.doc-card b{font-size:14px}.doc-card small{display:block;color:var(--tinta-2);font-size:12px}
+.reg{border:1px solid #E4F5EF;border-radius:16px;padding:14px;margin:10px 0;background:#FBFFFD;animation:entra .3s var(--anim)}
+.reg .reg-topo{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.reg b{font-size:15px}
+.badge{font-size:11px;font-weight:800;border-radius:999px;padding:4px 10px}
+.badge.laudo{background:#E5F6FF;color:#0b5e86}.badge.imagem{background:#EFE9FF;color:#5a3fd4}
+.badge.prescricao{background:#E8FBF1;color:#0a7a4f}.badge.nota{background:#FFF3DC;color:#8a5a00}
+.badge.shred{background:#2b2b2b;color:#fff}
+.reg .meta{font-size:12px;color:var(--tinta-2);margin-top:6px;word-break:break-all}
+.pipe{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.passo{font-size:12px;font-weight:700;border-radius:999px;padding:7px 12px;background:#F0F7F5;color:var(--tinta-2);border:1px solid #E4F5EF;transition:all .3s}
+.passo.ativo{background:var(--amarelo);color:#5a3a00;animation:pulsa 1s infinite}
+.passo.ok{background:var(--verde-vivo);color:#04322b}
+@keyframes pulsa{50%{transform:scale(1.06)}}
+.grant{border:1px solid #E4F5EF;border-radius:16px;padding:14px;margin:10px 0;background:#FBFFFD}
+.grant.expirado{opacity:.6}
+.contador{font-variant-numeric:tabular-nums;font-weight:800;color:var(--teal-escuro)}
+.ev{display:flex;gap:10px;align-items:baseline;padding:8px 4px;border-bottom:1px dashed #E4F5EF;font-size:13px;flex-wrap:wrap}
+.ev time{font-size:11px;color:var(--tinta-2);min-width:74px}
+.ev .tipo{font-size:11px;font-weight:800;border-radius:8px;padding:3px 8px;background:var(--papel-2);color:var(--teal-profundo)}
+.ev .tipo.neg{background:#FFE4EE;color:#B0205B}
+.ev small{color:var(--tinta-2);word-break:break-all}
+.bloco{border:1px solid #E4F5EF;border-radius:14px;padding:10px 14px;margin:8px 0;font-size:12px;background:#FBFFFD}
+.bloco code{color:var(--teal-escuro);word-break:break-all}
+#overlay{position:fixed;inset:0;background:rgba(10,40,36,.45);backdrop-filter:blur(4px);display:none;place-items:center;z-index:50;padding:16px}
+#overlay.visivel{display:grid}
+.modal{background:#fff;border-radius:22px;box-shadow:var(--sombra);max-width:440px;width:100%;padding:24px;text-align:center;animation:entra .3s var(--anim);max-height:90vh;overflow:auto}
+.modal h3{margin:0 0 8px;color:var(--teal-profundo)}
+.modal .corpo{font-size:14px;color:var(--tinta-2);word-break:break-all}
+.modal img.qr{width:230px;height:230px;border-radius:16px;border:6px solid var(--papel-2);margin:10px auto;display:block}
+.code-grande{font-size:34px;font-weight:900;letter-spacing:6px;color:var(--teal-profundo);background:var(--papel-2);border-radius:14px;padding:10px 18px;display:inline-block;margin:8px 0}
+.selo-gde{font-size:26px;font-weight:900;letter-spacing:3px;color:#5a3a00;background:var(--amarelo);border-radius:14px;padding:10px 16px;display:inline-block;margin:10px 0}
+.modal .acoes{justify-content:center}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--tinta);color:#fff;
+  border-radius:14px;padding:12px 20px;font-size:14px;font-weight:700;opacity:0;transition:all .35s var(--anim);z-index:60;max-width:90vw}
+#toast.visivel{opacity:1;transform:translateX(-50%)}
+.aviso{font-size:12px;background:#FFF3DC;border:1px solid #F3DFAE;color:#7a5200;border-radius:12px;padding:10px 14px;margin-top:14px}
+.negado{background:#FFE4EE;border:1px solid #F5B9D2;border-radius:16px;padding:16px;color:#8a1448;font-weight:700;margin-top:12px}
+.permitido{background:#E8FBF1;border:1px solid #B9ECD4;border-radius:16px;padding:16px;margin-top:12px}
+.leitura{background:#fff;border:1px dashed #B9ECD4;border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
+footer{text-align:center;font-size:11px;color:var(--tinta-2);padding:26px 12px}
+.dica{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--tinta-2);background:var(--papel-2);border-radius:12px;padding:10px 14px;margin:10px 0}
+input[type=range]{width:100%}
+ol.passos{padding-left:20px;font-size:14px;color:var(--tinta-2)}
+ol.passos li{margin:6px 0}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="marca">
+    <div class="logo-cubo">🧬</div>
+    <div>
+      <h1>Tm3d · Soberania Clínica</h1>
+      <p class="slogan">seus dados de saúde, suas chaves · Φgital m3d.pro</p>
+    </div>
+  </div>
+  <span class="pill" id="pill-rede">⛓ rede tm3d-local-sim · 79999</span>
+  <span class="pill" id="pill-ext">⚪ extensão não conectada</span>
+</header>
+<nav id="tabs">
+  <button class="tab ativo" data-sec="inicio">🏠 Início</button>
+  <button class="tab" data-sec="cofre">🗂 Cofre de DNFT</button>
+  <button class="tab" data-sec="consent">🤝 Consentimento</button>
+  <button class="tab" data-sec="medico">🩺 Sessão do Médico</button>
+  <button class="tab" data-sec="auditoria">🧾 Auditoria</button>
+  <button class="tab" data-sec="ajustes">⚙️ Ajustes</button>
+</nav>
+<main>
+<!-- ══════════ INÍCIO ══════════ -->
+<section class="sec visivel" id="sec-inicio">
+  <div class="heroi">
+    <div class="logo-cubo">🧬</div>
+    <h2>Seu prontuário, suas chaves.</h2>
+    <p>O Tm3d guarda seus exames e laudos <b>cifrados no seu próprio navegador</b>. Na rede, viajam apenas ponteiros e permissões — nunca um dado de saúde em claro. Você decide quem vê, o quê, e por quanto tempo.</p>
+    <div class="selos">
+      <span class="selo-chip">🔐 cifra AES-256 real</span>
+      <span class="selo-chip">🧬 DNFT soulbound</span>
+      <span class="selo-chip">⏱ consentimento com validade</span>
+      <span class="selo-chip">📜 LGPD · art. 11 e 18</span>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h2>1 · Sua identidade</h2>
+      <p class="sub">Criada automaticamente neste dispositivo. Nada de senhas ou cadastros.</p>
+      <div class="kv"><span>Carteira</span><b id="st-carteira">criando…</b></div>
+      <div class="kv"><span>Identidade (DID)</span><b id="st-did">criando…</b></div>
+      <div class="kv"><span>DNFT de saúde</span><b id="st-dnft">ainda não cunhado</b></div>
+      <div class="acoes">
+        <button class="bt bt-forte" id="bt-cunhar">🪙 Cunhar meu DNFT</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>2 · Seu cofre em números</h2>
+      <p class="sub">Tudo cifrado antes de sair daqui. Sempre.</p>
+      <div class="kv"><span>Registros guardados</span><b id="st-docs">0</b></div>
+      <div class="kv"><span>Acessos ativos agora</span><b id="st-grants">0</b></div>
+      <div class="kv"><span>Blocos na rede local</span><b id="st-blocks">0</b></div>
+      <div class="acoes">
+        <button class="bt" id="bt-ir-cofre">🗂 Abrir o cofre</button>
+        <button class="bt bt-amarelo" id="bt-demo">✨ Carregar demonstração</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🦊 Conectar a extensão do Firefox</h2>
+    <p class="sub">A extensão é o seu atalho no navegador: ela se conecta a <b>esta mesma rede</b> e mostra seus registros em qualquer aba. O pareamento é por <b>QR Code</b> — sem tokens longos, sem copiar e colar endereços.</p>
+    <ol class="passos">
+      <li>Clique em <b>Gerar QR de pareamento</b> abaixo.</li>
+      <li>No Firefox, abra a extensão Tm3d e toque em <b>“Ler QR / digitar código”</b>.</li>
+      <li>Pronto: a extensão passa a enxergar seus registros cifrados.</li>
+    </ol>
+    <div class="acoes">
+      <button class="bt bt-forte" id="bt-qr">📱 Gerar QR de pareamento</button>
+    </div>
+    <div class="aviso" id="ext-hint" hidden>⚠️ O pareamento só funciona quando você abre o DApp <b>pelo servidor</b> (ex.: <code>http://localhost:8791</code>), não pelo arquivo solto. Veja o README — é um comando só.</div>
+  </div>
+</section>
+
+<!-- ══════════ COFRE ══════════ -->
+<section class="sec" id="sec-cofre">
+  <div class="card">
+    <h2>🗂 Guardar novo registro</h2>
+    <p class="sub">Escreva uma nota ou anexe um arquivo. A cifragem acontece <b>aqui mesmo</b>, antes de qualquer envio.</p>
+    <label class="rot">Título</label>
+    <input class="campo" id="novo-titulo" placeholder="Ex.: Hemograma de outubro">
+    <label class="rot">Tipo</label>
+    <select class="campo" id="novo-tipo">
+      <option value="1">🧪 Laudo / exame laboratorial</option>
+      <option value="2">🩻 Imagem (DICOM)</option>
+      <option value="3">💊 Prescrição</option>
+      <option value="4">📝 Nota clínica</option>
+    </select>
+    <label class="rot">Conteúdo (texto) — ou anexe um arquivo abaixo</label>
+    <textarea class="campo" id="novo-texto" placeholder="Cole aqui o texto do laudo, ou deixe em branco e anexe um arquivo…"></textarea>
+    <label class="rot">Arquivo (opcional)</label>
+    <input class="campo" id="novo-arquivo" type="file">
+    <div class="pipe" id="pipe" hidden>
+      <span class="passo" data-p="0">📄 lendo</span>
+      <span class="passo" data-p="1">🔐 cifrando</span>
+      <span class="passo" data-p="2">🧊 gerando CID</span>
+      <span class="passo" data-p="3">🔑 embrulhando chave</span>
+      <span class="passo" data-p="4">⛏ ancorando na rede</span>
+    </div>
+    <div class="acoes">
+      <button class="bt bt-forte" id="bt-guardar">🔒 Cifrar e guardar no cofre</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Seus registros</h2>
+    <p class="sub">Cada cartão mostra apenas o ponteiro (CID). O conteúdo só abre com a sua chave.</p>
+    <div id="lista-regs"><p class="sub">Cofre vazio por enquanto — guarde o primeiro registro acima ou carregue a demonstração. 🌱</p></div>
+  </div>
+</section>
+
+<!-- ══════════ CONSENTIMENTO ══════════ -->
+<section class="sec" id="sec-consent">
+  <div class="card">
+    <h2>🤝 Conceder acesso</h2>
+    <p class="sub">Você escolhe <b>quem</b>, <b>o quê</b> e <b>por quanto tempo</b>. A permissão expira sozinha — e você pode revogar antes, com um toque.</p>
+    <label class="rot">Profissional</label>
+    <div id="lista-docs"></div>
+    <label class="rot">O que essa pessoa poderá ver</label>
+    <div class="chips" id="chips-scope">
+      <button class="chip chip-scope ativo" data-scope="READ_RECORDS">📄 Prontuários</button>
+      <button class="chip chip-scope" data-scope="READ_IMAGING">🩻 Imagens</button>
+      <button class="chip chip-scope" data-scope="READ_LABS">🧪 Exames de laboratório</button>
+    </div>
+    <label class="rot">Finalidade</label>
+    <select class="campo" id="sel-finalidade">
+      <option>consulta de rotina</option>
+      <option>segunda opinião</option>
+      <option>teleconsulta teleM3D</option>
+      <option>emergência</option>
+    </select>
+    <label class="rot">Validade do acesso: <span id="ttl-label">2 horas</span></label>
+    <input type="range" id="ttl-range" min="1" max="24" value="2">
+    <div class="acoes">
+      <button class="bt bt-forte" id="bt-conceder">✍️ Assinar e conceder acesso</button>
+    </div>
+    <div class="dica">✍️ A assinatura é feita com a sua chave local (estilo EIP-712) — nenhum “gas”, nenhum custo, nenhum código para copiar.</div>
+  </div>
+  <div class="card">
+    <h2>Acessos concedidos</h2>
+    <div id="lista-grants"><p class="sub">Nenhum acesso concedido ainda.</p></div>
+  </div>
+</section>
+
+<!-- ══════════ MÉDICO ══════════ -->
+<section class="sec" id="sec-medico">
+  <div class="card">
+    <h2>🩺 Sessão do Médico</h2>
+    <p class="sub">Veja o sistema pelo lado de quem atende: o médico só lê o que você autorizou — e só enquanto o acesso estiver valendo.</p>
+    <label class="rot">Profissional</label>
+    <select class="campo" id="med-doc"></select>
+    <label class="rot">Escopo solicitado</label>
+    <select class="campo" id="med-escopo">
+      <option value="READ_RECORDS">📄 Prontuários</option>
+      <option value="READ_IMAGING">🩻 Imagens</option>
+      <option value="READ_LABS">🧪 Exames de laboratório</option>
+    </select>
+    <div class="acoes">
+      <button class="bt bt-forte" id="bt-cond">🔎 Consultar condição na rede</button>
+    </div>
+    <div id="med-result"></div>
+  </div>
+</section>
+
+<!-- ══════════ AUDITORIA ══════════ -->
+<section class="sec" id="sec-auditoria">
+  <div class="card">
+    <h2>🧾 Trilha de auditoria</h2>
+    <p class="sub">Cada evento vira um bloco minerado na rede local — imutável e exportável como evidência.</p>
+    <div class="acoes" style="margin-bottom:10px">
+      <button class="bt bt-mini" id="bt-export-aud">⬇ Exportar evidência (JSON)</button>
+    </div>
+    <div id="lista-evs"><p class="sub">Nenhum evento ainda.</p></div>
+  </div>
+  <div class="card">
+    <h2>⛏ Blocos da rede local</h2>
+    <div id="lista-blocos"><p class="sub">Bloco gênese aguardando o primeiro evento.</p></div>
+  </div>
+</section>
+
+<!-- ══════════ AJUSTES ══════════ -->
+<section class="sec" id="sec-ajustes">
+  <div class="card">
+    <h2>⚙️ Ajustes</h2>
+    <div class="kv"><span>Carteira</span><b id="aj-addr">—</b></div>
+    <div class="kv"><span>DID</span><b id="aj-did">—</b></div>
+    <div class="kv"><span>Extensão Firefox</span><b id="ext-info">não pareada</b></div>
+    <div class="acoes">
+      <button class="bt bt-forte" id="bt-qr2">📱 QR de pareamento</button>
+      <button class="bt" id="bt-export">⬇ Exportar cofre (JSON)</button>
+      <button class="bt" id="bt-import">⬆ Importar cofre</button>
+      <input type="file" id="imp-file" accept="application/json" hidden>
+    </div>
+    <div class="acoes">
+      <button class="bt bt-amarelo" id="bt-demo2">✨ Recarregar demonstração</button>
+      <button class="bt bt-perigo" id="bt-apagar">🗑 Apagar tudo</button>
+    </div>
+    <div class="aviso">⚠️ <b>Ambiente de demonstração.</b> A rede é simulada localmente (chainid 79999) e a re-cifragem é ilustrativa; a criptografia em si é real (WebCrypto). Não use dados de saúde reais. Na versão de produção, as chaves vivem numa carteira com recuperação social — nunca no armazenamento do navegador.</div>
+  </div>
+</section>
+</main>
+<footer>Tm3d Protocol · demonstração local v3.0 · Φgital m3d.pro · 🔒 criptografia ponta a ponta · 📜 LGPD by design</footer>
+<div id="overlay"><div class="modal" id="modal"></div></div>
+<div id="toast"></div>
+<script src="qr.js"></script>
+<script>
+/* ═══════════════ Tm3d DApp — núcleo (rede local simulada + WebCrypto real) ═══════════════ */
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const LS='tm3d.cofre.v3';
+const KINDS={1:['laudo','🧪 Laudo'],2:['imagem','🩻 Imagem'],3:['prescricao','💊 Prescrição'],4:['nota','📝 Nota']};
+const SCOPES={READ_RECORDS:'📄 Prontuários',READ_IMAGING:'🩻 Imagens',READ_LABS:'🧪 Laboratório'};
+const PROS=[
+ {id:'p1',nome:'Dra. Helena Marques',esp:'Cardiologista',emoji:'👩‍⚕️',cor:'linear-gradient(135deg,#9B8CFF,#4CC9F0)'},
+ {id:'p2',nome:'Dr. Rafael Nogueira',esp:'Radiologista',emoji:'👨‍⚕️',cor:'linear-gradient(135deg,#FF9F45,#FF6B9D)'},
+ {id:'p3',nome:'Dr. Índio Xukuru',esp:'Clínico · saúde remota',emoji:'🧑‍⚕️',cor:'linear-gradient(135deg,#06D6A0,#47B29F)'}
+];
+const SCOPES_POR_TIPO={1:'READ_LABS',2:'READ_IMAGING',3:'READ_RECORDS',4:'READ_RECORDS'};
+
+/* ---------- utilidades ---------- */
+const enc=new TextEncoder(), dec=new TextDecoder();
+const buf2b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const b642buf=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)).buffer;
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const rand=n=>crypto.getRandomValues(new Uint8Array(n));
+const sha256=async d=>crypto.subtle.digest('SHA-256',d);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const addrDemo=()=> '0x'+hex(rand(20));
+const b32=h=>{const A='abcdefghijklmnopqrstuvwxyz234567';let s='';for(let i=0;i<h.length;i+=2)s+=A[parseInt(h.substr(i,2),16)%32];return s;};
+const fakeCID=async ct=> 'bafy'+b32(hex(await sha256(ct))).slice(0,46);
+const fmtT=t=>new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('visivel');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('visivel'),2600);}
+function modal(html){$('#modal').innerHTML=html;$('#overlay').classList.add('visivel');}
+function fechaModal(){$('#overlay').classList.remove('visivel');}
+$('#overlay').addEventListener('click',e=>{if(e.target.id==='overlay')fechaModal();});
+
+/* ---------- estado ---------- */
+let S=null; // estado persistido
+function estadoNovo(){return{v:3,addr:null,did:null,ecdsa:null,ecdh:null,tokenId:null,docs:[],grants:[],events:[],blocks:[],nonce:0,pairCode:null,extPareada:false};}
+async function salvar(){
+ const ec=sKeys.ecdsa, dh=sKeys.ecdh;
+ S.ecdsa=ec?{priv:await crypto.subtle.exportKey('jwk',ec.privateKey),pub:await crypto.subtle.exportKey('jwk',ec.publicKey)}:null;
+ S.ecdh=dh?{priv:await crypto.subtle.exportKey('jwk',dh.privateKey),pub:await crypto.subtle.exportKey('jwk',dh.publicKey)}:null;
+ localStorage.setItem(LS,JSON.stringify(S));
+}
+let sKeys={ecdsa:null,ecdh:null};
+async function carregar(){
+ try{S=JSON.parse(localStorage.getItem(LS))||estadoNovo();}catch(e){S=estadoNovo();}
+ if(S.ecdsa){sKeys.ecdsa={privateKey:await crypto.subtle.importKey('jwk',S.ecdsa.priv,{name:'ECDSA',namedCurve:'P-256'},true,['sign']),
+   publicKey:await crypto.subtle.importKey('jwk',S.ecdsa.pub,{name:'ECDSA',namedCurve:'P-256'},true,['verify'])};}
+ if(S.ecdh){sKeys.ecdh={privateKey:await crypto.subtle.importKey('jwk',S.ecdh.priv,{name:'ECDH',namedCurve:'P-256'},true,['deriveKey']),
+   publicKey:await crypto.subtle.importKey('jwk',S.ecdh.pub,{name:'ECDH',namedCurve:'P-256'},true,[])};}
+}
+async function garanteIdentidade(){
+ if(S.addr)return;
+ S.addr=addrDemo(); S.did='did:ethr:79999:'+S.addr;
+ sKeys.ecdsa=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign','verify']);
+ sKeys.ecdh=await crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveKey']);
+ await salvar();
+}
+
+/* ---------- rede local simulada ---------- */
+async function evento(tipo,msg,dados){
+ const ev={tipo,msg,at:Date.now(),dados:dados||{}};
+ S.events.push(ev);
+ await minerar([tipo]);
+ renderTudo();
+}
+async function minerar(tipos){
+ const prev=S.blocks.length?S.blocks[S.blocks.length-1].hash:'0'.repeat(64);
+ let nonce=0,h='';
+ do{nonce++;h=hex(await sha256(enc.encode(prev+nonce+tipos.join(','))));}while(!h.startsWith('00')&&nonce<20000);
+ S.blocks.push({n:S.blocks.length,hash:h,prev,nonce,at:Date.now(),tipos});
+ await salvar();
+}
+
+/* ---------- DNFT ---------- */
+async function cunhar(){
+ if(S.tokenId){toast('Você já tem um DNFT 🪙');return;}
+ await garanteIdentidade();
+ S.tokenId=S.blocks.length+1;
+ await evento('DNFTMinted','DNFT #'+S.tokenId+' cunhado e travado (soulbound) na sua carteira',{tokenId:S.tokenId});
+ toast('🪙 DNFT soberano cunhado! É seu para sempre.');
+}
+
+/* ---------- cofre: cifrar e guardar ---------- */
+async function guardarRegistro(){
+ if(!S.tokenId){toast('Cunhe seu DNFT primeiro 🪙');vai('inicio');return;}
+ const titulo=$('#novo-titulo').value.trim()||'Registro sem título';
+ const tipo=+$('#novo-tipo').value;
+ const arq=$('#novo-arquivo').files[0];
+ let dados;
+ if(arq){dados=await arq.arrayBuffer();}else{const t=$('#novo-texto').value.trim();if(!t){toast('Escreva algo ou anexe um arquivo 📄');return;}dados=enc.encode(t).buffer;}
+ $('#pipe').hidden=false;const ps=$$('#pipe .passo');ps.forEach(p=>p.className='passo');
+ const marca=async(i)=>{if(i>0){ps[i-1].classList.add('ok');}ps[i].classList.add('ativo');await sleep(340);};
+ await marca(0);
+ const dk=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+ const iv=rand(12);await marca(1);
+ const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},dk,dados);await marca(2);
+ const cid=await fakeCID(ct);await marca(3);
+ const dkRaw=await crypto.subtle.exportKey('raw',dk);
+ const wrapKey=await crypto.subtle.deriveKey({name:'ECDH',public:sKeys.ecdh.publicKey},sKeys.ecdh.privateKey,{name:'AES-GCM',length:256},false,['encrypt']);
+ const wIv=rand(12);
+ const wrapped=await crypto.subtle.encrypt({name:'AES-GCM',iv:wIv},wrapKey,dkRaw);await marca(4);
+ const doc={id:'r'+Date.now().toString(36),titulo,tipo,at:Date.now(),cid,digest:hex(await sha256(ct)),
+   ct:buf2b64(ct),iv:buf2b64(iv),wrap:buf2b64(wrapped),wIv:buf2b64(wIv),dk:buf2b64(dkRaw),
+   binario:!!arq,nomeArq:arq?arq.name:null,shredded:false};
+ S.docs.push(doc);
+ await evento('RecordAppended','“'+titulo+'” cifrado e ancorado · '+cid.slice(0,14)+'…',{doc:doc.id,cid});
+ ps[4].classList.add('ok');ps[4].classList.remove('ativo');
+ setTimeout(()=>$('#pipe').hidden=true,900);
+ $('#novo-titulo').value='';$('#novo-texto').value='';$('#novo-arquivo').value='';
+ toast('🔒 Guardado cifrado no cofre!');
+ netEnviaRecs();
+}
+async function abrirRegistro(id){
+ const d=S.docs.find(x=>x.id===id);if(!d)return;
+ if(d.shredded){modal(`<h3>🗑 Registro eliminado</h3><p class="corpo">A chave deste registro foi destruída (crypto-shredding, LGPD art. 18). O bloco cifrado continua na rede, mas é matematicamente indecifrável.</p><div class="acoes"><button class="bt bt-forte" onclick="fechaModal()">Entendi</button></div>`);return;}
+ const dk=await crypto.subtle.importKey('raw',b642buf(d.dk),{name:'AES-GCM'},false,['decrypt']);
+ const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(b642buf(d.iv))},dk,b642buf(d.ct));
+ let corpo;
+ if(d.binario){corpo=`<p class="corpo">📎 Arquivo <b>${d.nomeArq}</b> (${(pt.byteLength/1024).toFixed(1)} KB) decifrado localmente.</p><div class="acoes"><button class="bt" id="m-dl">⬇ Baixar decifrado</button></div>`;}
+ else{corpo=`<div class="leitura" style="text-align:left;white-space:pre-wrap">${dec.decode(pt).replace(/</g,'&lt;')}</div>`;}
+ modal(`<h3>${KINDS[d.tipo][1]} · ${d.titulo.replace(/</g,'&lt;')}</h3><p class="corpo" style="font-size:12px">CID ${d.cid.slice(0,22)}… · ${fmtT(d.at)}</p>${corpo}<div class="acoes"><button class="bt bt-forte" onclick="fechaModal()">Fechar</button></div>`);
+ const dl=$('#m-dl');if(dl)dl.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([pt]));a.download=d.nomeArq||'registro';a.click();};
+}
+async function shred(id){
+ const d=S.docs.find(x=>x.id===id);if(!d)return;
+ d.shredded=true;delete d.dk;delete d.wrap;
+ await evento('KeyShredded','Chave de “'+d.titulo+'” destruída — direito de eliminação exercido (LGPD art. 18)',{doc:id});
+ toast('🗑 Chave destruída. O registro é agora indecifrável.');
+}
+
+/* ---------- consentimento ---------- */
+let selDoc='p1', selScope='READ_RECORDS';
+async function conceder(){
+ if(!S.tokenId){toast('Cunhe seu DNFT primeiro 🪙');vai('inicio');return;}
+ const horas=+$('#ttl-range').value;
+ const pro=PROS.find(p=>p.id===selDoc);
+ const expira=Date.now()+horas*3600e3;
+ const payload=enc.encode(`${S.tokenId}|${pro.id}|${selScope}|${$('#sel-finalidade').value}|${horas}|${++S.nonce}`);
+ const sig=await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},sKeys.ecdsa.privateKey,payload);
+ S.grants=S.grants.filter(g=>!(g.pro===pro.id&&g.escopo===selScope&&g.ativo));
+ S.grants.push({id:'g'+Date.now().toString(36),pro:pro.id,escopo:selScope,finalidade:$('#sel-finalidade').value,expira,ativo:true,sig:buf2b64(sig).slice(0,24)+'…'});
+ await evento('ConsentGranted','Acesso de '+SCOPES[selScope]+' concedido a '+pro.nome+' · vale por '+horas+'h · finalidade: '+$('#sel-finalidade').value,{pro:pro.id,escopo:selScope});
+ toast('🤝 Acesso concedido com assinatura local');
+}
+async function revogar(id){
+ const g=S.grants.find(x=>x.id===id);if(!g)return;
+ g.ativo=false;g.revogado=true;
+ const pro=PROS.find(p=>p.id===g.pro);
+ await evento('ConsentRevoked','Acesso de '+pro.nome+' revogado manualmente por você',{pro:g.pro});
+ toast('🔒 Acesso revogado imediatamente');
+}
+
+/* ---------- sessão do médico ---------- */
+async function medicoConsulta(){
+ const proId=$('#med-doc').value, escopo=$('#med-escopo').value;
+ const pro=PROS.find(p=>p.id===proId);
+ const g=S.grants.find(x=>x.pro===proId&&x.escopo===escopo&&x.ativo&&x.expira>Date.now());
+ await evento('AccessEvaluated',pro.nome+' pediu '+SCOPES[escopo]+' → '+(g?'AUTORIZADO':'NEGADO'),{pro:proId,escopo,ok:!!g});
+ if(!g){
+   await evento('AccessDenied','Re-cifragem não executada para '+pro.nome+' — condição falsa na rede',{pro:proId});
+   $('#med-result').innerHTML=`<div class="negado">⛔ ACESSO NEGADO — ${pro.nome} não tem consentimento ativo para ${SCOPES[escopo]}. Nenhuma chave foi re-cifrada. O pedido ficou registrado na trilha de auditoria.</div>`;
+   return;
+ }
+ await evento('AccessGranted','Rede re-cifrou a chave de dados para '+pro.nome+' (válido até '+fmtT(g.expira)+')',{pro:proId});
+ const docs=S.docs.filter(d=>!d.shredded&&SCOPES_POR_TIPO[d.tipo]===escopo);
+ if(!docs.length){$('#med-result').innerHTML=`<div class="permitido">✅ Acesso autorizado, mas não há registros deste escopo no cofre.</div>`;return;}
+ $('#med-result').innerHTML=`<div class="permitido">✅ <b>ACESSO AUTORIZADO</b> — a rede re-cifrou as chaves só para esta sessão. Válido até ${fmtT(g.expira)}.</div>`+
+   docs.map(d=>`<div class="leitura" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span>${KINDS[d.tipo][1]} <b>${d.titulo}</b></span><button class="bt bt-mini bt-forte" onclick="medicoLer('${d.id}')">🔓 Decifrar localmente</button></div>`).join('');
+}
+async function medicoLer(id){
+ const d=S.docs.find(x=>x.id===id);
+ const dk=await crypto.subtle.importKey('raw',b642buf(d.dk),{name:'AES-GCM'},false,['decrypt']);
+ const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(b642buf(d.iv))},dk,b642buf(d.ct));
+ const txt=d.binario?`📎 Arquivo “${d.nomeArq}” (${(pt.byteLength/1024).toFixed(1)} KB) — decifrado apenas na memória desta sessão.`:dec.decode(pt);
+ modal(`<h3>🩺 Visão do médico</h3><p class="corpo" style="font-size:12px">${d.titulo} · decifrado via re-cifragem de proxy (simulada)</p><div class="leitura" style="text-align:left;white-space:pre-wrap">${txt.replace(/</g,'&lt;')}</div><div class="acoes"><button class="bt bt-forte" onclick="fechaModal()">Fechar</button></div>`);
+}
+
+/* ---------- renders ---------- */
+function renderStatus(){
+ $('#st-carteira').textContent=S.addr?S.addr.slice(0,8)+'…'+S.addr.slice(-4):'—';
+ $('#st-did').textContent=S.did?S.did.slice(0,26)+'…':'—';
+ $('#st-dnft').textContent=S.tokenId?'#'+S.tokenId+' · soulbound 🔒':'ainda não cunhado';
+ $('#st-docs').textContent=S.docs.length;
+ $('#st-grants').textContent=S.grants.filter(g=>g.ativo&&g.expira>Date.now()).length;
+ $('#st-blocks').textContent=S.blocks.length;
+ $('#bt-cunhar').disabled=!!S.tokenId;
+ $('#aj-addr').textContent=S.addr||'—';$('#aj-did').textContent=S.did||'—';
+ $('#ext-info').textContent=S.extPareada?'🟢 pareada nesta sessão':'não pareada';
+ const p=$('#pill-ext');if(S.extPareada){p.textContent='🦊 extensão conectada';p.classList.add('on');}else{p.textContent='⚪ extensão não conectada';p.classList.remove('on');}
+}
+function renderRegs(){
+ const el=$('#lista-regs');
+ if(!S.docs.length){el.innerHTML='<p class="sub">Cofre vazio por enquanto — guarde o primeiro registro ou carregue a demonstração. 🌱</p>';return;}
+ el.innerHTML=S.docs.map(d=>`<div class="reg">
+   <div class="reg-topo"><span class="badge ${KINDS[d.tipo][0]}">${KINDS[d.tipo][1]}</span><b>${d.titulo.replace(/</g,'&lt;')}</b>
+   ${d.shredded?'<span class="badge shred">🗑 eliminado</span>':''}</div>
+   <div class="meta">${fmtT(d.at)} · CID ${d.cid.slice(0,20)}… · digest ${d.digest.slice(0,16)}…</div>
+   <div class="acoes">
+     <button class="bt bt-mini" onclick="abrirRegistro('${d.id}')">👁 Abrir (decifrar)</button>
+     ${d.shredded?'':`<button class="bt bt-mini bt-perigo" onclick="shred('${d.id}')">🗑 Exercer direito de eliminação</button>`}
+   </div></div>`).join('');
+}
+function renderDocs(){
+ $('#lista-docs').innerHTML=PROS.map(p=>`<div class="doc-card ${p.id===selDoc?'ativo':''}" onclick="selDoc='${p.id}';renderDocs()">
+   <div class="avatar" style="background:${p.cor}">${p.emoji}</div>
+   <div><b>${p.nome}</b><small>${p.esp}</small></div></div>`).join('');
+}
+function renderGrants(){
+ const el=$('#lista-grants');const agora=Date.now();
+ if(!S.grants.length){el.innerHTML='<p class="sub">Nenhum acesso concedido ainda.</p>';return;}
+ el.innerHTML=[...S.grants].reverse().map(g=>{
+  const pro=PROS.find(p=>p.id===g.pro);
+  const ativo=g.ativo&&g.expira>agora;
+  const estado=ativo?'<span class="contador" data-expira="'+g.expira+'"></span>':(g.revogado?'🔒 revogado por você':'⏱ expirado sozinho');
+  return `<div class="grant ${ativo?'':'expirado'}"><div class="reg-topo"><b>${pro.emoji} ${pro.nome}</b><span class="badge ${ativo?'prescricao':'shred'}">${ativo?'ATIVO':'ENCERRADO'}</span></div>
+   <div class="meta">${SCOPES[g.escopo]} · finalidade: ${g.finalidade} · assinatura ${g.sig}</div>
+   <div class="meta">${estado}</div>
+   ${ativo?`<div class="acoes"><button class="bt bt-mini bt-perigo" onclick="revogar('${g.id}')">🔒 Revogar acesso imediatamente</button></div>`:''}</div>`;
+ }).join('');
+}
+function renderAud(){
+ const ev=$('#lista-evs');
+ ev.innerHTML=S.events.length?[...S.events].reverse().map(e=>`<div class="ev"><time>${fmtT(e.at)}</time><span class="tipo ${e.tipo==='AccessDenied'||e.tipo==='KeyShredded'?'neg':''}">${e.tipo}</span><small>${e.msg}</small></div>`).join(''):'<p class="sub">Nenhum evento ainda.</p>';
+ const bl=$('#lista-blocos');
+ bl.innerHTML=S.blocks.length?[...S.blocks].reverse().slice(0,12).map(b=>`<div class="bloco">⛏ bloco <b>#${b.n}</b> · <code>${b.hash.slice(0,18)}…</code> ← prev <code>${b.prev.slice(0,10)}…</code> · ${b.tipos.join(', ')} · nonce ${b.nonce}</div>`).join(''):'<p class="sub">Bloco gênese aguardando o primeiro evento.</p>';
+}
+function renderTudo(){renderStatus();renderRegs();renderDocs();renderGrants();renderAud();}
+setInterval(()=>{ // contadores regressivos
+ $$('.contador').forEach(c=>{const r=+c.dataset.expira-Date.now();
+   if(r<=0){c.textContent='⏱ expirando…';setTimeout(renderTudo,600);return;}
+   const h=Math.floor(r/3600e3),m=Math.floor(r%3600e3/60e3),s=Math.floor(r%60e3/1e3);
+   c.textContent='⏳ expira em '+(h?h+'h ':'')+m+'m '+String(s).padStart(2,'0')+'s';});
+},1000);
+
+/* ---------- navegação ---------- */
+function vai(sec){$$('.tab').forEach(t=>t.classList.toggle('ativo',t.dataset.sec===sec));$$('.sec').forEach(s=>s.classList.toggle('visivel',s.id==='sec-'+sec));window.scrollTo({top:0,behavior:'smooth'});}
+$$('.tab').forEach(t=>t.onclick=()=>vai(t.dataset.sec));
+
+/* ---------- demonstração ---------- */
+async function carregaDemo(){
+ S=estadoNovo();sKeys={ecdsa:null,ecdh:null};localStorage.removeItem(LS);
+ await garanteIdentidade();await cunhar();
+ const demos=[['Hemograma completo','1','Hemácias: 4,8 M/µL · Hemoglobina: 14,2 g/dL · Leucócitos: 6.300/µL · Plaquetas: 212.000/µL · Coleta: laboratório parceiro.'],
+  ['Ressonância de crânio (série DICOM)','2','Sequências T1/T2/FLAIR sem alterações agudas. Ventrículos de morfologia preservada.'],
+  ['Prescrição — Losartana 50mg','3','Losartana potássica 50 mg — 1 comprimido pela manhã, uso contínuo. Retorno em 90 dias.']];
+ for(const [t,k,txt] of demos){
+  $('#novo-titulo').value=t;$('#novo-tipo').value=k;$('#novo-texto').value=txt;
+  $('#pipe').hidden=true;await guardarRegistro();
+ }
+ selDoc='p1';selScope='READ_RECORDS';$('#ttl-range').value=4;$('#sel-finalidade').selectedIndex=0;await conceder();
+ selDoc='p2';selScope='READ_IMAGING';$('#ttl-range').value=2;$('#sel-finalidade').selectedIndex=1;await conceder();
+ $('#ttl-range').value=2;$('#ttl-label').textContent='2 horas';
+ toast('✨ Demonstração pronta: 1 DNFT, 3 registros cifrados, 2 consentimentos');
+ vai('inicio');
+}
+
+/* ---------- exportar / importar ---------- */
+function baixar(nome,conteudo,tipo){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([conteudo],{type:tipo||'application/json'}));a.download=nome;a.click();}
+function exportarCofre(){baixar('tm3d-cofre.json',JSON.stringify(S,null,2));toast('⬇ Cofre exportado');}
+function exportarAuditoria(){baixar('tm3d-evidencia-auditoria.json',JSON.stringify({geradoEm:new Date().toISOString(),rede:'tm3d-local-sim (79999)',eventos:S.events,blocos:S.blocks},null,2));toast('🧾 Evidência exportada');}
+async function importarCofre(f){
+ try{const j=JSON.parse(await f.text());if(!j||j.v!==3)throw 0;S=j;sKeys={ecdsa:null,ecdh:null};
+  if(S.ecdsa){sKeys.ecdsa={privateKey:await crypto.subtle.importKey('jwk',S.ecdsa.priv,{name:'ECDSA',namedCurve:'P-256'},true,['sign']),publicKey:await crypto.subtle.importKey('jwk',S.ecdsa.pub,{name:'ECDSA',namedCurve:'P-256'},true,['verify'])};}
+  if(S.ecdh){sKeys.ecdh={privateKey:await crypto.subtle.importKey('jwk',S.ecdh.priv,{name:'ECDH',namedCurve:'P-256'},true,['deriveKey']),publicKey:await crypto.subtle.importKey('jwk',S.ecdh.pub,{name:'ECDH',namedCurve:'P-256'},true,[])};}
+  renderTudo();toast('⬆ Cofre importado');
+ }catch(e){toast('Arquivo inválido 😕');}
+}
+
+/* ---------- rede: WebSocket + pareamento por QR com a extensão ---------- */
+let ws=null,wsOk=false;
+function wsUrl(){return (location.protocol==='https:'?'wss://':'ws://')+location.host+'/ws?role=web';}
+function netConecta(){
+ try{ws=new WebSocket(wsUrl());}catch(e){return;}
+ ws.onopen=()=>{wsOk=true;};
+ ws.onclose=()=>{wsOk=false;S.extPareada=false;renderStatus();setTimeout(netConecta,4000);};
+ ws.onerror=()=>{};
+ ws.onmessage=async ev=>{
+  let m;try{m=JSON.parse(ev.data);}catch(e){return;}
+  if(m.type==='pair'&&m.code&&m.code===S.pairCode){S.extPareada=true;renderStatus();toast('🦊 Extensão pareada!');fechaModal();netEnviaRecs();await evento('ExtensionPaired','Extensão Firefox pareada via QR (código de 6 dígitos)',{});}
+  else if(m.type==='req'){await netAtendeReq(m);}
+ };
+}
+function netSend(o){if(ws&&ws.readyState===1)ws.send(JSON.stringify(o));}
+function netEnviaRecs(){if(!S.extPareada)return;netSend({type:'recs',payload:S.docs.map(d=>({id:d.id,titulo:d.titulo,tipo:d.tipo,at:d.at,shredded:d.shredded}))});}
+async function netAtendeReq(m){
+ const d=S.docs.find(x=>x.id===m.recId);if(!d||d.shredded){netSend({type:'rec-denied',recId:m.recId});return;}
+ const key=await crypto.subtle.importKey('raw',await sha256(enc.encode('TM3D-PAIR-'+S.pairCode)),{name:'AES-GCM'},false,['encrypt']);
+ const dk=await crypto.subtle.importKey('raw',b642buf(d.dk),{name:'AES-GCM'},false,['decrypt']);
+ const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(b642buf(d.iv))},dk,b642buf(d.ct));
+ const iv2=rand(12);const ct2=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv2},key,pt);
+ netSend({type:'rec',recId:d.id,titulo:d.titulo,tipo:d.tipo,binario:d.binario,nomeArq:d.nomeArq,iv:buf2b64(iv2),ct:buf2b64(ct2)});
+ await evento('AccessGranted','Extensão Firefox abriu “'+d.titulo+'” (sessão pareada por QR)',{doc:d.id,via:'extensao'});
+}
+async function gerarQR(){
+ if(!wsOk){$('#ext-hint').hidden=false;vai('inicio');toast('Abra o DApp pelo servidor para parear 🙂');return;}
+ S.pairCode=String(Math.floor(100000+Math.random()*900000));await salvar();
+ const payload='tm3d://pair?ws='+encodeURIComponent((location.protocol==='https:'?'wss://':'ws://')+location.host)+'&code='+S.pairCode;
+ const qr=qrcode(0,'M');qr.addData(payload);qr.make();
+ modal(`<h3>📱 Parear extensão Firefox</h3>
+  <img class="qr" src="${qr.createDataURL(5,10)}" alt="QR de pareamento">
+  <p class="corpo">Na extensão, toque em <b>“Ler QR”</b> e aponte a câmera — ou digite o código:</p>
+  <div class="code-grande">${S.pairCode}</div>
+  <p class="corpo" style="font-size:12px">O código vale só para esta sessão e também é a chave que protege a troca. Nada de tokens longos. 😉</p>
+  <div class="acoes"><button class="bt bt-forte" onclick="fechaModal()">Fechar</button></div>`);
+ setTimeout(async()=>{S.pairCode=null;await salvar();},10*60e3);
+}
+
+/* ---------- ligações de UI ---------- */
+$('#bt-cunhar').onclick=cunhar;
+$('#bt-demo').onclick=carregaDemo;$('#bt-demo2').onclick=carregaDemo;
+$('#bt-ir-cofre').onclick=()=>vai('cofre');
+$('#bt-guardar').onclick=guardarRegistro;
+$('#bt-conceder').onclick=conceder;
+$('#bt-cond').onclick=medicoConsulta;
+$('#bt-export').onclick=exportarCofre;$('#bt-export-aud').onclick=exportarAuditoria;
+$('#bt-import').onclick=()=>$('#imp-file').click();
+$('#imp-file').onchange=e=>e.target.files[0]&&importarCofre(e.target.files[0]);
+$('#bt-apagar').onclick=()=>{if(confirm('Apagar cofre, chaves, eventos e blocos deste navegador?')){localStorage.removeItem(LS);location.reload();}};
+$('#bt-qr').onclick=gerarQR;$('#bt-qr2').onclick=gerarQR;
+$('#ttl-range').oninput=e=>$('#ttl-label').textContent=e.target.value+(+e.target.value===1?' hora':' horas');
+$$('.chip-scope').forEach(c=>c.onclick=()=>{selScope=c.dataset.scope;$$('.chip-scope').forEach(x=>x.classList.toggle('ativo',x===c));});
+$('#med-doc').innerHTML=PROS.map(p=>`<option value="${p.id}">${p.emoji} ${p.nome} · ${p.esp}</option>`).join('');
+if(location.protocol==='file:'){$('#ext-hint').hidden=false;}
+
+/* ---------- boot ---------- */
+(async()=>{await carregar();await garanteIdentidade();renderTudo();netConecta();})();
+</script>
+</body>
+</html>

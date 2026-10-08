@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "Tm3d · Chaveiro Clínico",
+  "version": "3.0.0",
+  "description": "Atalho do cofre Tm3d no Firefox: pareie por QR Code com o DApp na sua rede local e abra seus registros cifrados em qualquer aba.",
+  "permissions": ["storage", "tabs", "downloads", "camera"],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Tm3d — cofre clínico"
+  },
+  "background": { "scripts": ["background.js"], "persistent": true },
+  "icons": { "48": "icon.svg", "96": "icon.svg" },
+  "browser_specific_settings": {
+    "gecko": { "id": "tm3d-chaveiro@m3d.pro", "strict_min_version": "109.0" }
+  }
+}
